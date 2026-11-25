@@ -1,0 +1,15 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Guest links</title>
+<style>body{font:16px system-ui;max-width:560px;margin:24px auto;padding:0 16px;color:#4a1522}input,textarea{width:100%;padding:10px;font:inherit;margin:6px 0 14px;border:1px solid #c9a45c;border-radius:8px}button,a.b{padding:8px 12px;border:0;border-radius:8px;background:#6e1f2f;color:#fff;font:600 13px system-ui;text-decoration:none;cursor:pointer;margin-left:6px}
+.row{display:flex;align-items:center;justify-content:space-between;gap:8px;border-bottom:1px solid #eee;padding:10px 0}.row span{word-break:break-all;font-size:13px}</style></head><body>
+<h2>Personal invite links</h2>
+<label>Your invite website address</label><input id="base" placeholder="https://your-site.netlify.app/">
+<label>Guest names (one per line)</label><textarea id="names" rows="6" placeholder="Sharma family&#10;Patil uncle &amp; aunty&#10;Rahul"></textarea>
+<button onclick="go()" style="margin:0 0 16px">Make links</button><div id="out"></div>
+<script>
+base.value=localStorage.getItem('b')||(location.protocol.startsWith('http')?location.href.replace(/links\.html.*/,''):'');
+function go(){localStorage.setItem('b',base.value);out.innerHTML='';names.value.split('\n').map(x=>x.trim()).filter(Boolean).forEach(n=>{
+const u=base.value.replace(/\/?$/,'/')+'?to='+encodeURIComponent(n);const r=document.createElement('div');r.className='row';
+const sp=document.createElement('span');sp.textContent=n;const c=document.createElement('button');c.textContent='Copy';c.onclick=()=>{navigator.clipboard.writeText(u);c.textContent='Copied'};
+const a=document.createElement('a');a.className='b';a.target='_blank';a.textContent='WhatsApp';a.href='https://wa.me/?text='+encodeURIComponent('Dear '+n+', you are warmly invited to our wedding! Open your invitation: '+u);
+r.append(sp,c,a);out.appendChild(r)})}
+</script></body></html>
