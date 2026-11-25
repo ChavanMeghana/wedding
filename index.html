@@ -618,7 +618,7 @@ function burst(kind,count,ox,oy){
 function tick(){cx.clearRect(0,0,cv.width,cv.height);
   parts=parts.filter(p=>p.y<cv.height+30&&p.y>-60&&p.life<(p.max||420));
   parts.forEach(p=>{p.life++;p.x+=p.vx+(p.g?0:Math.sin(p.life/20+p.r)*.6);p.y+=p.vy;if(p.g){p.vy+=p.g;p.vx*=.985}p.r+=p.vr;
-    if(p.spark){cx.globalAlpha=1-p.life/p.max;cx.fillStyle=p.col;cx.beginPath();cx.arc(p.x,p.y,p.sz,0,7);cx.fill();cx.globalAlpha=1;return}
+    if(p.spark){p.vx+=Math.sin(p.life/6+p.r)*.05;p.vx*=.98;cx.globalAlpha=Math.min(1,(1-p.life/p.max)*1.6);cx.save();cx.translate(p.x,p.y);cx.rotate(p.r);cx.scale(p.s,p.s);cx.drawImage(p.sp,-p.sp.width/2,-p.sp.height/2);cx.restore();cx.globalAlpha=1;return}
     cx.save();cx.translate(p.x,p.y);cx.rotate(p.r);cx.scale(p.s,p.s);
     if(p.img){const m=p.sp||petalIm;cx.drawImage(m,-m.width/2,-m.height/2)}else{cx.fillStyle=p.col;cx.fillRect(-5,-3,10,6)}cx.restore()});
   if(parts.length)requestAnimationFrame(tick);else run=false}
@@ -648,7 +648,7 @@ $('#heartBtn').addEventListener('click',e=>{const r=e.currentTarget.getBoundingC
 
 /* ---- sparkle trail ---- */
 let lastSp=0;
-function spark(x,y,n){for(let i=0;i<n;i++)parts.push({x,y,vx:Math.random()*3-1.5,vy:Math.random()*3-1.5,r:0,vr:0,s:1,spark:1,max:28+Math.random()*14,life:0,g:.03,col:['#e8d3a0','#c9a45c','#fff6dc'][i%3],sz:1.5+Math.random()*2.5});
+function spark(x,y,n){for(let i=0;i<n;i++)parts.push({x:x+Math.random()*16-8,y:y+Math.random()*10-5,vx:Math.random()*3-1.5,vy:-Math.random()*2.2-.2,r:Math.random()*6.28,vr:Math.random()*.1-.05,s:.55+Math.random()*.6,spark:1,max:80+Math.random()*40,life:0,g:.04,sp:petalIm});
   if(!run){run=true;requestAnimationFrame(tick)}}
 document.addEventListener('pointerdown',e=>{spark(e.clientX,e.clientY,10)});
 document.addEventListener('pointermove',e=>{const t=performance.now();if(e.buttons&&t-lastSp>45){lastSp=t;spark(e.clientX,e.clientY,2)}});
